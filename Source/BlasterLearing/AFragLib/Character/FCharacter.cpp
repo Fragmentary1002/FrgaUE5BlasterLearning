@@ -22,15 +22,12 @@ AFCharacter::AFCharacter()
     CameraBoom->SetupAttachment(RootComponent);
     
     // 设置弹簧臂长度（摄像机与角色的默认距离）
-    // - 单位：虚幻单位（UU），1 UU ≈ 1 厘米
     CameraBoom->TargetArmLength = 500.f;
     
-    // 启用角色旋转控制弹簧臂
-    // - 当玩家控制器旋转时，弹簧臂同步旋转（适用于第三人称视角）
+    // 启用角色旋转控制弹簧臂  当玩家控制器旋转时，弹簧臂同步旋转（适用于第三人称视角） 
     CameraBoom->bUsePawnControlRotation = true;
     
-    // 启用摄像机延迟效果
-    // - 移动时产生平滑跟随感，避免镜头瞬时跳动
+    // 启用摄像机延迟效果,产生平滑跟随感
     CameraBoom->bEnableCameraLag = true;
 
 
@@ -54,6 +51,61 @@ void AFCharacter::BeginPlay()
 	
 }
 
+// Called to bind functionality to input
+void AFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+
+    PlayerInputComponent->BindAxis("MoveForward", this, &AFCharacter::MoveForward);
+    PlayerInputComponent->BindAxis("MoveRight", this, &AFCharacter::MoveRight);
+    PlayerInputComponent->BindAxis("Turn", this, &AFCharacter::Turn);   
+    PlayerInputComponent->BindAxis("LookUp", this, &AFCharacter::LookUp);
+
+}
+
+void AFCharacter::MoveForward(float Value)
+{
+    if (Controller && Value != 0.0f)
+    {
+        // 获取前向向量并应用移动
+
+        // ​​完整控制器旋转（包含俯仰角）​
+        // const FRotator Rotation = Controller->GetControlRotation();
+        //  ​​仅Yaw方向旋转（锁定水平移动）​
+        const FRotator Rotation = FRotator(0.f, Controller->GetControlRotation().Yaw, 0.f);
+        const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::X);
+        AddMovementInput(Direction, Value);
+    }
+}
+
+void AFCharacter::MoveRight(float Value)
+{
+    if (Controller && Value != 0.0f)
+    {
+        // 获取右向向量并应用移动
+
+        // ​​完整控制器旋转（包含俯仰角）​
+        // const FRotator Rotation = Controller->GetControlRotation();
+        //  ​​仅Yaw方向旋转（锁定水平移动）​
+        const FRotator Rotation = FRotator(0.f, Controller->GetControlRotation().Yaw, 0.f);
+        const FVector Direction = FRotationMatrix(Rotation).GetScaledAxis(EAxis::Y);
+        AddMovementInput(Direction, Value);
+    }
+}
+
+void AFCharacter::Turn(float Value)
+{
+    // 处理水平旋转输入
+    AddControllerYawInput(Value);
+}
+
+
+void AFCharacter::LookUp(float Value)
+{
+    // 处理垂直旋转输入
+    AddControllerPitchInput(Value);
+}
+
 // Called every frame
 void AFCharacter::Tick(float DeltaTime)
 {
@@ -61,10 +113,6 @@ void AFCharacter::Tick(float DeltaTime)
 
 }
 
-// Called to bind functionality to input
-void AFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-}
+
 
