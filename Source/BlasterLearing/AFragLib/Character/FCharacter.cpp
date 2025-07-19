@@ -5,7 +5,7 @@
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-
+#include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values
 AFCharacter::AFCharacter()
@@ -27,10 +27,6 @@ AFCharacter::AFCharacter()
     // 启用角色旋转控制弹簧臂  当玩家控制器旋转时，弹簧臂同步旋转（适用于第三人称视角） 
     CameraBoom->bUsePawnControlRotation = true;
     
-    // 启用摄像机延迟效果,产生平滑跟随感
-    CameraBoom->bEnableCameraLag = true;
-
-
 
     // 创建摄像机组件（挂载到弹簧臂末端插槽）
     FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
@@ -40,8 +36,12 @@ AFCharacter::AFCharacter()
     FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 
 	// 设置摄像机的视角控制
-    FollowCamera->bUsePawnControlRotation = true;
+    FollowCamera->bUsePawnControlRotation = false; // 禁用摄像机的控制器旋转（通常用于第一人称视角）
 
+
+    //动画后的优化
+    bUseControllerRotationYaw = false; // 禁止控制器偏航旋转
+    GetCharacterMovement()->bOrientRotationToMovement = true; // 角色朝向移动方向
 }
 
 // Called when the game starts or when spawned
