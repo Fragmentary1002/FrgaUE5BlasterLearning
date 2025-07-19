@@ -506,7 +506,7 @@ void UCombatComponent::OnRep_Grenades()
 
 void UCombatComponent::JumpToShotgunEnd()
 {
-	// Ìø×ªµ½¶¯»­ÉÏµ¯½áÊø
+	// ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½
 	UAnimInstance* AnimInstance = Character->GetMesh()->GetAnimInstance();
 	if (AnimInstance && Character->GetReloadMontage())
 	{
@@ -688,7 +688,8 @@ void UCombatComponent::OnRep_SecondaryWeapon()
 
 void UCombatComponent::TraceUnderCrosshairs(FHitResult& TraceHitResult)
 {
-	FVector2D ViewportSize;
+	// FVector2D ViewportSize;
+	FVector2D ViewportSize = FVector2D::ZeroVector; // æ˜¾å¼åˆå§‹åŒ–
 	if (GEngine && GEngine->GameViewport)
 	{
 		GEngine->GameViewport->GetViewportSize(ViewportSize);
@@ -766,7 +767,7 @@ void UCombatComponent::SetHUDCrosshairs(float DeltaTime)
 				HUDPackage.CrosshairsBottom = nullptr;
 				HUDPackage.CrosshairsTop = nullptr;
 			}
-			// ¼ÆËã×¼ÐÄÉ¢²¼
+			// ï¿½ï¿½ï¿½ï¿½×¼ï¿½ï¿½É¢ï¿½ï¿½
 
 			// [0, 600] -> [0, 1]
 			FVector2D WalkSpeedRange(0.f, Character->GetCharacterMovement()->MaxWalkSpeed);
@@ -874,7 +875,7 @@ bool UCombatComponent::CanFire()
 //	}
 //	if (bLocallyReloading)
 //	{
-//		// ÔÊÐíö±µ¯Ç¹ÔÚÓÐ×Óµ¯Ê±×°ÌîµÄ¹ý³ÌÖÐ¿ª»ð
+//		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç¹ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½Ê±×°ï¿½ï¿½Ä¹ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½ï¿½
 //		if (!EquippedWeapon->IsEmpty() && bCanFire && CombatState == ECombatState::ECS_Reloading && EquippedWeapon->GetWeaponType() == EWeaponType::EWT_Shotgun)
 //		{
 //			bLocallyReloading = false;

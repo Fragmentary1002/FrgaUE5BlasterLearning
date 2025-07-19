@@ -61,8 +61,10 @@ ABlasterCharacter::ABlasterCharacter()
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 0.f, 850.f);
 
 	TurningInPlace = ETurningInPlace::ETIP_NotTurning;
-	NetUpdateFrequency = 66.f;
-	MinNetUpdateFrequency = 33.f;
+	// NetUpdateFrequency = 66.f;
+	// MinNetUpdateFrequency = 33.f;
+	SetNetUpdateFrequency(66.f);
+	SetMinNetUpdateFrequency(33.f);
 
 	DissolveTimeline = CreateDefaultSubobject<UTimelineComponent>(TEXT("DissolveTimelineComponent"));
 
@@ -71,7 +73,7 @@ ABlasterCharacter::ABlasterCharacter()
 	AttachedGrenade->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	/*
-	* Hit Boxes(ÓÃÓÚ·þÎñÆ÷µ¹´øÃüÖÐÅÐ¶Ï)
+	* Hit Boxes(ï¿½ï¿½ï¿½Ú·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¶ï¿½)
 	*/
 
 	head = CreateDefaultSubobject<UBoxComponent>(TEXT("head"));
@@ -190,7 +192,7 @@ void ABlasterCharacter::MulticastElim_Implementation(bool bPlayerLeftGame)
 	}
 	bElimmed = true;
 	PlayElimMontage();
-	// ¿ªÊ¼ÈÜ½âÐ§¹û
+	// ï¿½ï¿½Ê¼ï¿½Ü½ï¿½Ð§ï¿½ï¿½
 	if (DissolveMaterialInstance)
 	{
 		DynamicDissolveMaterialInstance = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
@@ -200,19 +202,19 @@ void ABlasterCharacter::MulticastElim_Implementation(bool bPlayerLeftGame)
 	}
 	StartDissolve();
 
-	// ½ûÓÃ½ÇÉ«ÒÆ¶¯
+	// ï¿½ï¿½ï¿½Ã½ï¿½É«ï¿½Æ¶ï¿½
 	bDisableGameplay = true;
 	GetCharacterMovement()->DisableMovement();
 	if (Combat)
 	{
 		Combat->FireButtonPressed(false);
 	}
-	// ½ûÓÃÅö×²
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×²
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	AttachedGrenade->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
-	// Éú³ÉÏû³ý»úÆ÷ÈË
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	if (ElimBotEffect)
 	{
 		FVector ElimBotSpawnPoint(GetActorLocation().X, GetActorLocation().Y, GetActorLocation().Z + 200.f);
@@ -776,7 +778,7 @@ void ABlasterCharacter::AimOffset(float DeltaTime)
 	float Speed = CalculateSpeed();
 	bool bIsInAir = GetCharacterMovement()->IsFalling();
 
-	if (Speed == 0.f && !bIsInAir) // ¾²Ö¹²»¶¯£¬²»ÌøÔ¾
+	if (Speed == 0.f && !bIsInAir) // ï¿½ï¿½Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¾
 	{
 		bRotateRootBone = true;
 		FRotator CurrentAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
@@ -789,7 +791,7 @@ void ABlasterCharacter::AimOffset(float DeltaTime)
 		bUseControllerRotationYaw = true;
 		TurnInPlace(DeltaTime);
 	}
-	if (Speed > 0.f || bIsInAir) // ÅÜ»òÕßÌø
+	if (Speed > 0.f || bIsInAir) // ï¿½Ü»ï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		bRotateRootBone = false;
 		StartingAimRotation = FRotator(0.f, GetBaseAimRotation().Yaw, 0.f);
@@ -806,7 +808,7 @@ void ABlasterCharacter::CalculateAO_Pitch()
 	AO_Pitch = GetBaseAimRotation().Pitch;
 	if (AO_Pitch > 90.f && !IsLocallyControlled())
 	{
-		// ½«map¸©Ñö½Ç´Ó [270, 360) ×ª»»Îª [-90, 0)
+		// ï¿½ï¿½mapï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ [270, 360) ×ªï¿½ï¿½Îª [-90, 0)
 		FVector2D InRange(270.f, 360.f);
 		FVector2D OutRange(-90.f, 0.f);
 		AO_Pitch = FMath::GetMappedRangeValueClamped(InRange, OutRange, AO_Pitch);
