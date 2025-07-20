@@ -4,7 +4,7 @@
 #include "FPlayerHUDWidget.h"
 #include "Components/TextBlock.h"
 
-void UFPlayerHUDWidget::SetDisplayText(FString TextToDisplay)
+void UFPlayerHUDWidget::SetDisplayText(const  FString& TextToDisplay)
 {
 	if (DisplayText)
 	{
@@ -12,7 +12,7 @@ void UFPlayerHUDWidget::SetDisplayText(FString TextToDisplay)
 	}
 }
 
-void UFPlayerHUDWidget::ShowPlayerNetRole(APawn* InPawn)
+void UFPlayerHUDWidget::UpdateHUD(APawn* InPawn)
 {
 	ENetRole RemoteRole = InPawn->GetRemoteRole();
 	FString Role;
@@ -33,6 +33,8 @@ void UFPlayerHUDWidget::ShowPlayerNetRole(APawn* InPawn)
 	}
 	FString RemoteRoleString = FString::Printf(TEXT("Remote Role: %s"), *Role);
 	SetDisplayText(RemoteRoleString);
+
+	UE_LOG(LogTemp, Warning, TEXT("Remote Role: %s"), *Role);
 }
 
 void UFPlayerHUDWidget::NativeDestruct()

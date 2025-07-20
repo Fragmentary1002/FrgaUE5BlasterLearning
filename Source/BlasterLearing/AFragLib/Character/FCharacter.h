@@ -41,5 +41,5 @@ public:
 	class UCameraComponent* FollowCamera;
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UWidgetComponent* OverHeadWidget;
+	class UWidgetComponent* FPlayerHUDWidget;
 };

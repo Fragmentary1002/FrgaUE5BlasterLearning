@@ -38,12 +38,9 @@ AFCharacter::AFCharacter()
 
 
     //HUD
-    OverHeadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverHeadWidget"));
-    OverHeadWidget->SetupAttachment(RootComponent); // 将OverheadWidget附加到角色的根组件
-//     OverheadWidget->SetRelativeLocation(FVector(0.f, 0.f, 200.f)); // 设置OverheadWidget的位置
-//     OverheadWidget->SetWidgetSpace(EWidgetSpace::Screen); // 设置小部件空间为屏幕空间
-//     OverheadWidget->SetDrawSize(FVector2D(300.f, 100.f)); // 设置小部件的绘制大小
-//     OverheadWidget->SetVisibility(false); // 初始时隐藏OverheadWidget
+    FPlayerHUDWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("FPlayerHUDWidget"));
+    FPlayerHUDWidget->SetupAttachment(RootComponent); // 将OverheadWidget附加到角色的根组件
+
 }
 
 // Called when the game starts or when spawned
@@ -71,7 +68,7 @@ void AFCharacter::MoveForward(float Value)
     {
         // 获取前向向量并应用移动
 
-        // ​​完整控制器旋转（包含俯仰角）​
+        // 完整控制器旋转（包含俯仰角）​
         // const FRotator Rotation = Controller->GetControlRotation();
         //  ​​仅Yaw方向旋转（锁定水平移动）​
         const FRotator Rotation = FRotator(0.f, Controller->GetControlRotation().Yaw, 0.f);
