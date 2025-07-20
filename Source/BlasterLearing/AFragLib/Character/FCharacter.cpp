@@ -6,35 +6,28 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values
 AFCharacter::AFCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
 	// 创建弹簧臂组件（挂载到根组件）
     // - TEXT 宏确保字符串的跨平台本地化支持
-    CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-    
+    CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));  
     // 将弹簧臂附加至角色的根组件（如胶囊体）
     // - 确保组件层级关系：RootComponent → SpringArm → Camera [1,5](@ref)
-    CameraBoom->SetupAttachment(RootComponent);
-    
+    CameraBoom->SetupAttachment(RootComponent);   
     // 设置弹簧臂长度（摄像机与角色的默认距离）
-    CameraBoom->TargetArmLength = 500.f;
-    
+    CameraBoom->TargetArmLength = 500.f;   
     // 启用角色旋转控制弹簧臂  当玩家控制器旋转时，弹簧臂同步旋转（适用于第三人称视角） 
     CameraBoom->bUsePawnControlRotation = true;
-    
-
     // 创建摄像机组件（挂载到弹簧臂末端插槽）
-    FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
-    
+    FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));   
     // 将摄像机附加到弹簧臂末端的插槽
     // - 摄像机自动继承弹簧臂的位置和旋转，并处理碰撞回避 [3,5](@ref)
     FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
-
 	// 设置摄像机的视角控制
     FollowCamera->bUsePawnControlRotation = false; // 禁用摄像机的控制器旋转（通常用于第一人称视角）
 
@@ -42,6 +35,15 @@ AFCharacter::AFCharacter()
     //动画后的优化
     bUseControllerRotationYaw = false; // 禁止控制器偏航旋转
     GetCharacterMovement()->bOrientRotationToMovement = true; // 角色朝向移动方向
+
+
+    //HUD
+    OverHeadWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("OverHeadWidget"));
+    OverHeadWidget->SetupAttachment(RootComponent); // 将OverheadWidget附加到角色的根组件
+//     OverheadWidget->SetRelativeLocation(FVector(0.f, 0.f, 200.f)); // 设置OverheadWidget的位置
+//     OverheadWidget->SetWidgetSpace(EWidgetSpace::Screen); // 设置小部件空间为屏幕空间
+//     OverheadWidget->SetDrawSize(FVector2D(300.f, 100.f)); // 设置小部件的绘制大小
+//     OverheadWidget->SetVisibility(false); // 初始时隐藏OverheadWidget
 }
 
 // Called when the game starts or when spawned

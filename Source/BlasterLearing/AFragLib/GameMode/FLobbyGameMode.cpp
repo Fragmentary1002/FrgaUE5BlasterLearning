@@ -17,7 +17,7 @@ void AFLobbyGameMode::PostLogin(APlayerController* NewPlayer)
         if(World){
             bUseSeamlessTravel= true; // Set the game to started state
             // Start the game when there are 2 players
-            World->ServerTravel(FString("/Game/AFMaps/FMap?listen")); // Replace with your actual game map path
+            World->ServerTravel(FString("/Game/AFMaps/FBattleMap?listen")); // Replace with your actual game map path
         }
 
     }
