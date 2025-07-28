@@ -36,7 +36,8 @@ void AFWeaponBase::BeginPlay()
     {
 		AreaSphere ->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	 	AreaSphere ->SetCollisionResponseToChannel(ECC_Pawn,ECR_Overlap);
-	 	AreaSphere ->OnComponentBeginOverlap.AddDynamic(this,&AFWeaponBase::OnSphereOverlap)        
+	 	AreaSphere ->OnComponentBeginOverlap.AddDynamic(this,&AFWeaponBase::OnSphereOverlap);
+		AreaSphere -> OnComponentEndOverlap.AddDynamic(this,&AFWeaponBase::OnSphereEndOverlap);
     }
 }
 
@@ -51,6 +52,16 @@ void AFWeaponBase::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AAc
 	AFCharacter* character = Cast<AFCharacter>(OtherActor);
 	if (character && PickUpWidget)
 	{
-		PickUpWidget->SetVisibility(true);  // 显示拾取UI
+		character->SetOverlappingWeapon(this);  // 显示拾取UI
+	}
+}
+
+void AFWeaponBase::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	AFCharacter* character = Cast<AFCharacter>(OtherActor);
+	if (character && PickUpWidget)
+	{
+		character->SetOverlappingWeapon(nullptr);  // 显示拾取UI
 	}
 }

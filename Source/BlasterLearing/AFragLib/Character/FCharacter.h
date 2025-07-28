@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BlasterLearing/AFragLib/Weapon/FWeaponBase.h"
 #include "GameFramework/Character.h"
 #include "FCharacter.generated.h"
 
@@ -20,7 +21,10 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	
+	void SetOverlappingWeapon(AFWeaponBase* Weapon);
 
 protected:
 	// Called when the game starts or when spawned
@@ -31,7 +35,7 @@ protected:
 	void Turn(float Value);
 	void LookUp(float Value);
 
-public:	
+private:	
 	
 
 	UPROPERTY(VisibleAnyWhere, Category = Camera)
@@ -42,4 +46,12 @@ public:
 
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* FPlayerHUDWidget;
+
+	UPROPERTY(ReplicatedUsing = OnRep_OverlappingWeapon)
+	class AFWeaponBase* OverlappingWeapon;
+
+	UFUNCTION()
+	void OnRep_OverlappingWeapon(AFWeaponBase* lastWeapon);
+
+	
 };

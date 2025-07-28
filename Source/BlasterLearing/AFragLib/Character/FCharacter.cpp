@@ -3,12 +3,14 @@
 
 #include "FCharacter.h"
 
+#include "BlasterLearing/AFragLib/Weapon/FWeaponBase.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Net/UnrealNetwork.h"
 
-// Sets default values
+#pragma region 生命周期
 AFCharacter::AFCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -50,10 +52,57 @@ void AFCharacter::BeginPlay()
 	
 }
 
-// Called to bind functionality to input
+void AFCharacter::Tick(float DeltaTime)
+{
+    Super::Tick(DeltaTime);
+
+ 
+}
+
+#pragma endregion 
+
+# pragma region 变量复制
+void AFCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+    Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+    DOREPLIFETIME_CONDITION(AFCharacter,OverlappingWeapon,COND_OwnerOnly);
+    
+}
+
+void AFCharacter::SetOverlappingWeapon(AFWeaponBase* Weapon)
+{
+    if (OverlappingWeapon)
+    {
+        OverlappingWeapon->ShowPickupWidget(false);
+    }
+    OverlappingWeapon = Weapon;
+    if (IsLocallyControlled())
+    {
+        if (OverlappingWeapon)
+        {
+            OverlappingWeapon->ShowPickupWidget(true);
+        }
+    }
+}
+
+void AFCharacter::OnRep_OverlappingWeapon(AFWeaponBase* lastWeapon)
+{
+    if (OverlappingWeapon)
+    {
+        OverlappingWeapon->ShowPickupWidget(true);
+    }
+   if (lastWeapon)
+   {
+       lastWeapon->ShowPickupWidget(false);
+   }
+}
+# pragma endregion
+
+#pragma region 移动函数
 void AFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+    Super::SetupPlayerInputComponent(PlayerInputComponent);
 
     PlayerInputComponent->BindAxis("MoveForward", this, &AFCharacter::MoveForward);
     PlayerInputComponent->BindAxis("MoveRight", this, &AFCharacter::MoveRight);
@@ -61,6 +110,7 @@ void AFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
     PlayerInputComponent->BindAxis("LookUp", this, &AFCharacter::LookUp);
 
 }
+
 
 void AFCharacter::MoveForward(float Value)
 {
@@ -105,13 +155,4 @@ void AFCharacter::LookUp(float Value)
     AddControllerPitchInput(Value);
 }
 
-// Called every frame
-void AFCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-
-
-
-
+#pragma endregion
