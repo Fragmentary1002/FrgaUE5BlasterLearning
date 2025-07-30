@@ -65,3 +65,11 @@ void AFWeaponBase::OnSphereEndOverlap(UPrimitiveComponent* OverlappedComponent, 
 		character->SetOverlappingWeapon(nullptr);  // 显示拾取UI
 	}
 }
+
+void AFWeaponBase::ShowPickupWidget(bool bShowWidget)
+{
+	if (PickUpWidget)
+	{
+		PickUpWidget->SetVisibility(bShowWidget);
+	}
+}
