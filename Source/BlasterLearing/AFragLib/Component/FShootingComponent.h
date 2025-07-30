@@ -15,14 +15,21 @@ class BLASTERLEARING_API UFShootingComponent : public UActorComponent
 public:	
 
 	UFShootingComponent();
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	friend class AFCharacter;
 
+	void SetWeapon(class AFWeaponBase* Weapon) ;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+private:
+	class AFCharacter * Character;
+	class AFWeaponBase* CurWeapon;
+	
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	
+	
 
 		
 };

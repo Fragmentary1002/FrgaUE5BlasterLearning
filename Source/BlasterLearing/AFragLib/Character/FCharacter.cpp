@@ -4,11 +4,13 @@
 #include "FCharacter.h"
 
 #include "BlasterLearing/AFragLib/Weapon/FWeaponBase.h"
+#include "BlasterLearing/AFragLib/Component/FShootingComponent.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Net/UnrealNetwork.h"
+
 
 #pragma region 生命周期
 AFCharacter::AFCharacter()
@@ -43,6 +45,9 @@ AFCharacter::AFCharacter()
     FPlayerHUDWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("FPlayerHUDWidget"));
     FPlayerHUDWidget->SetupAttachment(RootComponent); // 将OverheadWidget附加到角色的根组件
 
+    //Component
+    shootingComponent = CreateDefaultSubobject<UFShootingComponent>(TEXT("ShootingComponent"));
+	shootingComponent ->SetIsReplicated(true); // 确保射击组件在网络上复制
 }
 
 // Called when the game starts or when spawned
@@ -69,6 +74,8 @@ void AFCharacter::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
     DOREPLIFETIME_CONDITION(AFCharacter,OverlappingWeapon,COND_OwnerOnly);
     
 }
+
+
 
 void AFCharacter::SetOverlappingWeapon(AFWeaponBase* Weapon)
 {
@@ -99,15 +106,41 @@ void AFCharacter::OnRep_OverlappingWeapon(AFWeaponBase* lastWeapon)
 }
 # pragma endregion
 
+# pragma region 装备
+void AFCharacter::EquipButtonPressed()
+{
+    if (shootingComponent && HasAuthority())
+    {
+        shootingComponent-> SetWeapon(OverlappingWeapon);
+    }
+}
+
+void AFCharacter::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
+    if (shootingComponent)
+    {
+        shootingComponent->Character= this; // 设置射击组件的角色引用
+    }
+}
+
+# pragma endregion 
+
+
 #pragma region 移动函数
 void AFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
     Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+
+    PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AFCharacter::Jump);
+
     PlayerInputComponent->BindAxis("MoveForward", this, &AFCharacter::MoveForward);
     PlayerInputComponent->BindAxis("MoveRight", this, &AFCharacter::MoveRight);
     PlayerInputComponent->BindAxis("Turn", this, &AFCharacter::Turn);   
     PlayerInputComponent->BindAxis("LookUp", this, &AFCharacter::LookUp);
+    
+    PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &AFCharacter::Jump);
 
 }
 
@@ -154,5 +187,7 @@ void AFCharacter::LookUp(float Value)
     // 处理垂直旋转输入
     AddControllerPitchInput(Value);
 }
+
+
 
 #pragma endregion
