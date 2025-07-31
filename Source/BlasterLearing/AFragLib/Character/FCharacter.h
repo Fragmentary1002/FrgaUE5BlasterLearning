@@ -56,6 +56,8 @@ private:
 
 	UPROPERTY(VisibleAnyWhere, Category = Compenents)
 	 class UFShootingComponent* shootingComponent;
-
+	
+	UFUNCTION(Server, Reliable)
+	void ServerEquipButtonPressed();
 
 };

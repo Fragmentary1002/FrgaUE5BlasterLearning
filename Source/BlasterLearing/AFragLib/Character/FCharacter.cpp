@@ -104,14 +104,26 @@ void AFCharacter::OnRep_OverlappingWeapon(AFWeaponBase* lastWeapon)
        lastWeapon->ShowPickupWidget(false);
    }
 }
+
+
 # pragma endregion
 
 # pragma region 装备
 void AFCharacter::EquipButtonPressed()
 {
-    if (shootingComponent && HasAuthority())
+    if (shootingComponent )
     {
-        shootingComponent-> SetWeapon(OverlappingWeapon);
+        if (HasAuthority())
+        {
+            //server端装备武器
+            shootingComponent-> SetWeapon(OverlappingWeapon);
+        }
+        else
+        {
+            //客户端请求装备武器
+            ServerEquipButtonPressed();
+        }
+       
     }
 }
 
@@ -125,6 +137,14 @@ void AFCharacter::PostInitializeComponents()
 }
 
 # pragma endregion 
+
+
+#pragma region 网络函数
+void AFCharacter::ServerEquipButtonPressed_Implementation()
+{
+    EquipButtonPressed();
+}
+#pragma endregion
 
 
 #pragma region 移动函数
@@ -191,3 +211,4 @@ void AFCharacter::LookUp(float Value)
 
 
 #pragma endregion
+

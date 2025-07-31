@@ -4,6 +4,7 @@
 #include "FShootingComponent.h"
 #include "BlasterLearing/AFragLib/Weapon/FWeaponBase.h"
 #include "BlasterLearing/AFragLib/Character/FCharacter.h"
+#include "Components/SphereComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
 
 UFShootingComponent::UFShootingComponent()
@@ -49,6 +50,6 @@ void UFShootingComponent::SetWeapon( AFWeaponBase* Weapon)
         UE_LOG(LogTemp, Warning, TEXT("RightHandSocket not found!"));
     }
 	CurWeapon ->SetOwner(Character); // 设置武器的拥有者为角色
-	CurWeapon->ShowPickupWidget(false); // 隐藏拾取UI
+	
 }
 
