@@ -142,7 +142,10 @@ void AFCharacter::PostInitializeComponents()
 #pragma region 网络函数
 void AFCharacter::ServerEquipButtonPressed_Implementation()
 {
-    EquipButtonPressed();
+    if (shootingComponent)
+    {
+        shootingComponent -> SetWeapon(OverlappingWeapon); // 在服务器上设置武器
+    }
 }
 #pragma endregion
 

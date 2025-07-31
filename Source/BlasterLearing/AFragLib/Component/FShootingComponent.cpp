@@ -6,6 +6,8 @@
 #include "BlasterLearing/AFragLib/Character/FCharacter.h"
 #include "Components/SphereComponent.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Net/UnrealNetwork.h"
+
 
 UFShootingComponent::UFShootingComponent()
 {
@@ -28,6 +30,13 @@ void UFShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+}
+
+void UFShootingComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UFShootingComponent, CurWeapon); // 确保当前武器在网络上复制
 }
 
 void UFShootingComponent::SetWeapon( AFWeaponBase* Weapon)

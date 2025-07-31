@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "BlasterLearing/AFragLib/Component/FShootingComponent.h"
 #include "BlasterLearing/AFragLib/Weapon/FWeaponBase.h"
 #include "GameFramework/Character.h"
 #include "FCharacter.generated.h"
@@ -24,8 +25,8 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PostInitializeComponents() override;
 	
-	void SetOverlappingWeapon(AFWeaponBase* Weapon);
 
+	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -60,4 +61,7 @@ private:
 	UFUNCTION(Server, Reliable)
 	void ServerEquipButtonPressed();
 
+public:
+	void SetOverlappingWeapon(AFWeaponBase* Weapon);
+	bool IsWeaponEquipped() const { return shootingComponent != nullptr && shootingComponent -> CurWeapon; }
 };

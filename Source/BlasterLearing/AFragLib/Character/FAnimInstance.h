@@ -36,4 +36,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (AllowPrivateAccess = "true"))
 	bool bIsAccelerating; // 加速状态标识，True表示角色正在加速移动（如奔跑）
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (AllowPrivateAccess = "true"))
+	bool bIsWeaponEquipped; // 武器装备状态标识，True表示角色已装备武器
 };

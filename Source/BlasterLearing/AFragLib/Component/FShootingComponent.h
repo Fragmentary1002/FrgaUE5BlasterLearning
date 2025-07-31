@@ -18,6 +18,8 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	friend class AFCharacter;
 
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	void SetWeapon(class AFWeaponBase* Weapon) ;
 protected:
 	// Called when the game starts
@@ -25,6 +27,8 @@ protected:
 
 private:
 	class AFCharacter * Character;
+
+	UPROPERTY(Replicated, VisibleAnywhere, Category = "Weapon")
 	class AFWeaponBase* CurWeapon;
 	
 public:	
