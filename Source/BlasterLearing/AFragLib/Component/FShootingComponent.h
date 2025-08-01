@@ -25,12 +25,19 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	void SetAiming(bool b);
+
+	UFUNCTION(Server, Reliable)
+	void ServerSetAiming(bool b);
+	
 private:
 	class AFCharacter * Character;
 
 	UPROPERTY(Replicated, VisibleAnywhere, Category = "Weapon")
 	class AFWeaponBase* CurWeapon;
-	
+
+	UPROPERTY(Replicated)
+	bool bAnim = false;
 public:	
 	
 	

@@ -24,6 +24,22 @@ void UFShootingComponent::BeginPlay()
 
 }
 
+void UFShootingComponent::SetAiming(bool b)
+{
+	bAnim = b; // 设置动画状态
+
+	if (!Character->HasAuthority())
+	{
+		// 如果不是服务器端，调用服务器函数来设置动画状态
+		ServerSetAiming(b);
+	}
+	
+}
+
+void UFShootingComponent::ServerSetAiming_Implementation(bool b)
+{
+	bAnim = b; // 设置动画状态
+}
 
 
 void UFShootingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -37,6 +53,8 @@ void UFShootingComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& 
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(UFShootingComponent, CurWeapon); // 确保当前武器在网络上复制
+	
+	DOREPLIFETIME(UFShootingComponent, bAnim);
 }
 
 void UFShootingComponent::SetWeapon( AFWeaponBase* Weapon)

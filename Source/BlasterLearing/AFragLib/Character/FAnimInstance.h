@@ -42,4 +42,8 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (AllowPrivateAccess = "true"))
 	bool bIsCroused; // 武器装备状态标识，True表示角色已装备武器
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Animation", meta = (AllowPrivateAccess = "true"))
+	bool bAnim; // 武器装备状态标识，True表示角色已装备武器
+
 };

@@ -36,9 +36,9 @@ protected:
 	void Turn(float Value);
 	void LookUp(float Value);
 	void CrouchPressed();
-	
 	void EquipButtonPressed();
-
+	void AnimBtnPressed() ;// 绑定动画事件
+	void AnimBtnReleased() ;
 private:	
 	
 
@@ -66,4 +66,5 @@ private:
 public:
 	void SetOverlappingWeapon(AFWeaponBase* Weapon);
 	bool IsWeaponEquipped() const { return shootingComponent != nullptr && shootingComponent -> CurWeapon; }
+	bool IsAniming();
 };

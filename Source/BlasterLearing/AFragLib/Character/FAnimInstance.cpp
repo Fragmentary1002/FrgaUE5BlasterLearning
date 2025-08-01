@@ -44,4 +44,6 @@ void UFAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
     bIsWeaponEquipped = FCharacter-> IsWeaponEquipped(); // 检查角色是否装备了武器
 
     bIsCroused = FCharacter ->bIsCrouched;
+
+    bAnim = FCharacter ->IsAniming(); // 检查角色是否正在执行动画
 }

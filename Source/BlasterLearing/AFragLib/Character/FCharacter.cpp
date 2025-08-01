@@ -96,6 +96,7 @@ void AFCharacter::SetOverlappingWeapon(AFWeaponBase* Weapon)
     }
 }
 
+
 void AFCharacter::OnRep_OverlappingWeapon(AFWeaponBase* lastWeapon)
 {
     if (OverlappingWeapon)
@@ -139,6 +140,9 @@ void AFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
     
     PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &AFCharacter::EquipButtonPressed);
     PlayerInputComponent->BindAction("Croush", IE_Pressed, this, &AFCharacter::CrouchPressed);
+
+    PlayerInputComponent->BindAction("Aim", IE_Pressed, this, &AFCharacter::AnimBtnPressed);
+    PlayerInputComponent->BindAction("Aim", IE_Released, this, &AFCharacter::AnimBtnReleased);
 }
 
 
@@ -207,6 +211,8 @@ void AFCharacter::EquipButtonPressed()
     }
 }
 
+
+
 void AFCharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
@@ -232,6 +238,30 @@ void AFCharacter::CrouchPressed()
        Super::Crouch(); // 调用父类的下蹲函数
    }
     return;
+}
+
+#pragma endregion
+
+#pragma region 动画事件
+
+void AFCharacter::AnimBtnPressed()
+{
+    if (shootingComponent)
+    {
+        shootingComponent->SetAiming(true); // 调用射击组件的动画按钮按下事件
+    }
+}
+void AFCharacter::AnimBtnReleased()
+{
+    if (shootingComponent)
+    {
+        shootingComponent->SetAiming(false); // 调用射击组件的动画按钮释放事件
+    }
+}
+
+bool AFCharacter::IsAniming()
+{
+    return shootingComponent && shootingComponent->bAnim; // 检查射击组件是否正在动画
 }
 
 #pragma endregion
