@@ -48,6 +48,9 @@ AFCharacter::AFCharacter()
     //Component
     shootingComponent = CreateDefaultSubobject<UFShootingComponent>(TEXT("ShootingComponent"));
 	shootingComponent ->SetIsReplicated(true); // 确保射击组件在网络上复制
+
+    GetCharacterMovement()->NavAgentProps.bCanCrouch =true; // 允许角色下蹲
+
 }
 
 // Called when the game starts or when spawned
@@ -108,35 +111,6 @@ void AFCharacter::OnRep_OverlappingWeapon(AFWeaponBase* lastWeapon)
 
 # pragma endregion
 
-# pragma region 装备
-void AFCharacter::EquipButtonPressed()
-{
-    if (shootingComponent )
-    {
-        if (HasAuthority())
-        {
-            //server端装备武器
-            shootingComponent-> SetWeapon(OverlappingWeapon);
-        }
-        else
-        {
-            //客户端请求装备武器
-            ServerEquipButtonPressed();
-        }
-       
-    }
-}
-
-void AFCharacter::PostInitializeComponents()
-{
-    Super::PostInitializeComponents();
-    if (shootingComponent)
-    {
-        shootingComponent->Character= this; // 设置射击组件的角色引用
-    }
-}
-
-# pragma endregion 
 
 
 #pragma region 网络函数
@@ -163,8 +137,8 @@ void AFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
     PlayerInputComponent->BindAxis("Turn", this, &AFCharacter::Turn);   
     PlayerInputComponent->BindAxis("LookUp", this, &AFCharacter::LookUp);
     
-    PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &AFCharacter::Jump);
-
+    PlayerInputComponent->BindAction("Equip", IE_Pressed, this, &AFCharacter::EquipButtonPressed);
+    PlayerInputComponent->BindAction("Croush", IE_Pressed, this, &AFCharacter::CrouchPressed);
 }
 
 
@@ -212,6 +186,52 @@ void AFCharacter::LookUp(float Value)
 }
 
 
-
 #pragma endregion
 
+# pragma region 装备
+void AFCharacter::EquipButtonPressed()
+{
+    if (shootingComponent )
+    {
+        if (HasAuthority())
+        {
+            //server端装备武器
+            shootingComponent-> SetWeapon(OverlappingWeapon);
+        }
+        else
+        {
+            //客户端请求装备武器
+            ServerEquipButtonPressed();
+        }
+       
+    }
+}
+
+void AFCharacter::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
+    if (shootingComponent)
+    {
+        shootingComponent->Character= this; // 设置射击组件的角色引用
+    }
+}
+
+# pragma endregion 
+
+
+#pragma region 下蹲
+
+void AFCharacter::CrouchPressed()
+{
+   if (bIsCrouched)
+   {
+       Super::UnCrouch();
+   }
+   else
+   {
+       Super::Crouch(); // 调用父类的下蹲函数
+   }
+    return;
+}
+
+#pragma endregion

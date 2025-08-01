@@ -42,4 +42,6 @@ void UFAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
     bIsAccelerating = FCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size() > 0; // 检查角色是否正在加速
 
     bIsWeaponEquipped = FCharacter-> IsWeaponEquipped(); // 检查角色是否装备了武器
+
+    bIsCroused = FCharacter ->bIsCrouched;
 }
